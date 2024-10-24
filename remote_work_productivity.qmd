@@ -125,9 +125,9 @@ for columna in columnas_categoricas:
 
 ## Verificar si hay patrones o relaciones presentes entre variables
 ```{python}
-sns.scatterplot(x='Hours_Studied', y='Exam_Score', data=df)
+sns.scatterplot(x='Productivity_Score', y='Employment_Type', data=df)
 plt.title('Relación entre Horas de Estudio y Puntuación de Examen')
-plt.xlabel('Horas de Estudio')
+plt.xlabel('Employment_Type')
 plt.ylabel('Puntuación de Examen')
 plt.show()
 
