@@ -245,24 +245,13 @@ df_clean['Distance_from_Home'] = le.fit_transform(df_clean['Distance_from_Home']
 
 ## OneHotEncoder
 
-### Internet_Access, Extracurricular_Activities, School_Type, Gender, ,Peer_Influence
+### Employment_Type
 ```{python}
 # Aplicar One-Hot Encoding
-df = pd.get_dummies(df, columns=['Extracurricular_Activities'])
-df = pd.get_dummies(df, columns=['Internet_Access'])
-df = pd.get_dummies(df, columns=['School_Type'])
-df = pd.get_dummies(df, columns=['Peer_Influence'])
-df = pd.get_dummies(df, columns=['Learning_Disabilities'])
-df = pd.get_dummies(df, columns=['Gender'])
-
+df = pd.get_dummies(df, columns=['Employment_Type'])
 # datos sin outlayers
+df_clean = pd.get_dummies(df_clean, columns=['Employment_Type'])
 
-df_clean = pd.get_dummies(df_clean, columns=['Extracurricular_Activities'])
-df_clean = pd.get_dummies(df_clean, columns=['Internet_Access'])
-df_clean = pd.get_dummies(df_clean, columns=['School_Type'])
-df_clean = pd.get_dummies(df_clean, columns=['Peer_Influence'])
-df_clean = pd.get_dummies(df_clean, columns=['Learning_Disabilities'])
-df_clean = pd.get_dummies(df_clean, columns=['Gender'])
 ```
 
 ```{python}
@@ -290,8 +279,8 @@ plt.show()
 correlation_matrix = df.corr()
 
 # Filtrar solo las correlaciones con la variable objetivo
-target_corr = correlation_matrix['Exam_Score'].sort_values(ascending=False)
-print("Correlación de cada variable con 'Exam_Score':\n", target_corr)
+target_corr = correlation_matrix['Productivity_Score'].sort_values(ascending=False)
+print("Correlación de cada variable con 'Productivity_Score':\n", target_corr)
 ```
 
 # Aplicación de modelos de machine learning
@@ -300,8 +289,8 @@ print("Correlación de cada variable con 'Exam_Score':\n", target_corr)
 
 ```{python}
 # Separar las características (X) y la variable objetivo (y)
-X = df.drop(columns=['Exam_Score'])  # Todas las columnas excepto la variable objetivo
-y = df['Exam_Score']  # La variable objetivo
+X = df.drop(columns=['Productivity_Score','Employee_ID' ])  # Todas las columnas excepto la variable objetivo
+y = df['Productivity_Score']  # La variable objetivo
 
 # Dividir el conjunto de datos en conjunto de entrenamiento y prueba
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
@@ -350,8 +339,8 @@ print(X.columns)
 ```{python}
 
 # Separar las variables independientes y la variable objetivo
-X = df.drop(columns=['Exam_Score'])
-y = df['Exam_Score']
+X = df.drop(columns=['Productivity_Score','Employee_ID'])
+y = df['Productivity_Score']
 
 # Dividir el conjunto de datos
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
@@ -390,8 +379,8 @@ print(f"R^2: {r2:.4f}")
 ## Predicción sin datos atípicos
 ```{python}
 # Separar las características (X) y la variable objetivo (y)
-X = df_clean.drop(columns=['Exam_Score'])  # Todas las columnas excepto la variable objetivo
-y = df_clean['Exam_Score']  # La variable objetivo
+X = df_clean.drop(columns=['Productivity_Score','Employee_ID'])  # Todas las columnas excepto la variable objetivo
+y = df_clean['Productivity_Score']  # La variable objetivo
 
 # Dividir el conjunto de datos en conjunto de entrenamiento y prueba
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
@@ -440,8 +429,8 @@ print(X.columns)
 ```{python}
 
 # Separar las variables independientes y la variable objetivo
-X = df_clean.drop(columns=['Exam_Score'])
-y = df_clean['Exam_Score']
+X = df_clean.drop(columns=['Productivity_Score','Employee_ID'])
+y = df_clean['Productivity_Score']
 
 # Dividir el conjunto de datos
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
@@ -474,57 +463,6 @@ print("Resultados del Stacking Regressor")
 print(f"MAE: {mae:.4f}")
 print(f"RMSE: {rmse:.4f}")
 print(f"R^2: {r2:.4f}")
+
+model.predict(X)
 ```
-
-## Comparación de métricas de modelos
-
-
-### Comparación de resultados:
-
-1. **Sin Datos Atípicos:**
-
-- Los modelos mejoran su desempeño cuando los datos atípicos han sido ajustados.
-
-Stacking Regressor tiene el mejor rendimiento con:
-
-MAE: 0.8760 (error promedio bajo)
-
-RMSE: 1.2578 (mejor precisión comparado con los otros modelos)
-
-R²: 0.8588 (explica el 85.88% de la variabilidad en la variable objetivo)
-
-  
-
-- Random Forest y Regresión Ridge/Lineal presentan un desempeño similar en términos de MAE y RMSE, pero están ligeramente por debajo del Stacking Regressor.
-
-- Regresión Lasso tiene un poco más de error en comparación con Ridge/Lineal.
-
-- Árbol de Decisión muestra un rendimiento inferior con un MAE de 1.5109 y un R² de 0.6025, lo cual indica que no es tan eficaz en capturar la relación entre las variables.
-
-  
-
-2. **Con Datos Atípicos:**
-
-- Los modelos se ven significativamente afectados por la presencia de outliers.
-
-Stacking Regressor sigue siendo el mejor modelo en este caso, pero sus métricas son peores:
-
-MAE: 0.9709
-
-RMSE: 1.9767
-
-R²: 0.7131 (una caída considerable comparada con el caso sin outliers, indicando que el modelo explica menos la variabilidad de la variable objetivo).
-
-- Regresión Ridge/Lineal tienen un MAE de aproximadamente 1.008 y un RMSE de 2.016, indicando que los errores son mayores y su capacidad para predecir disminuye.
-
-- Random Forest y Lasso también ven una degradación en su rendimiento.
-
-- Árbol de Decisión se ve severamente afectado, con un R² cercano a 0, lo que sugiere que apenas explica la variabilidad de la variable objetivo.
-
-  
-
-### Conclusiones:
-
-- Impacto de los Outliers: Los datos atípicos tienden a distorsionar las predicciones de los modelos, especialmente aquellos que no son robustos a valores extremos, como los árboles de decisión. Esto resulta en una mayor imprecisión (valores de MAE y RMSE más altos) y una menor capacidad de explicación (valores de R² más bajos).
-
-- Importancia del Preprocesamiento: Ajustar los outliers ha mejorado el rendimiento de todos los modelos, especialmente del Stacking Regressor. Esto sugiere que los datos limpios permiten a los modelos captar mejor las relaciones entre las variables.
