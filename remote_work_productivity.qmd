@@ -10,7 +10,7 @@ format:
 
 ## 1. Definir problema
 
-- En este proyecto, analizaremos un conjunto de datos de rendimiento de estudiantes con el objetivo de predecir el puntaje del examen de los estudiantes para generar un impacto en el rendimiento de los alumnos en el caso de que su rendimiento en los exámenes sea mejor compartiendo insights para la mejora del rendimiento del estudiante y se reduzca la posibilidad de desaprobar el examen.
+- En este proyecto, analizaremos un conjunto de datos relacionaciodnado con la productividad
 
 ## 2. Recopilación de datos
 
@@ -146,17 +146,6 @@ plt.show()
 ```{python}
 print("\nValores nulos por columna:")
 print(df.isnull().sum())
-```
-```{python}
-# Lista de las columnas categóricas que deseas reemplazar por la moda
-categorical_columns = ['Parental_Education_Level', 'Distance_from_Home', 'Teacher_Quality']
-
-# Iterar sobre cada columna y reemplazar los valores nulos con la moda
-for column in categorical_columns:
-    mode_value = df[column].mode()[0]  # Obtener la moda (el valor más frecuente)
-    df[column].fillna(mode_value, inplace=True)
-    print(f"Valores nulos en '{column}' reemplazados por la moda: '{mode_value}'")
-
 ```
 
 # Verificar si hay valores atípicos
